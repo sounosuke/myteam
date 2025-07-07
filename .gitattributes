@@ -1,0 +1,253 @@
+# AI Multi-Agent Parallel Execution System .gitattributes
+# Git attributes configuration for optimal version control
+
+# ============================================================================
+# TEXT FILE HANDLING & LINE ENDINGS
+# ============================================================================
+
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Explicitly declare text files
+*.txt text
+*.md text
+*.markdown text
+*.rst text
+*.yaml text
+*.yml text
+*.json text
+*.xml text
+*.html text
+*.css text
+*.js text
+*.ts text
+*.jsx text
+*.tsx text
+*.vue text
+*.php text
+*.sql text
+*.gitignore text
+*.gitattributes text
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# Python files
+*.py text eol=lf
+*.pyw text eol=lf
+*.pyx text eol=lf
+*.pxd text eol=lf
+*.pxi text eol=lf
+
+# Configuration files
+*.conf text eol=lf
+*.config text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+
+# Documentation
+README* text
+LICENSE* text
+CHANGELOG* text
+CONTRIBUTING* text
+INSTALL* text
+NEWS* text
+TODO* text
+
+# ============================================================================
+# BINARY FILES
+# ============================================================================
+
+# Explicitly declare binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+*.7z binary
+*.rar binary
+
+# Audio/Video
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.mov binary
+*.webm binary
+*.wav binary
+*.flac binary
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+
+# Executables
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.app binary
+
+# ============================================================================
+# DIFF AND MERGE STRATEGIES
+# ============================================================================
+
+# Large files that should not be diffed
+*.sql diff=sql
+*.log diff=log
+*.dump -diff
+
+# Generated files
+package-lock.json -diff
+yarn.lock -diff
+Pipfile.lock -diff
+
+# Binary files that shouldn't be merged
+*.pdf merge=binary
+*.png merge=binary
+*.jpg merge=binary
+*.zip merge=binary
+
+# ============================================================================
+# LANGUAGE-SPECIFIC SETTINGS
+# ============================================================================
+
+# Python
+*.py diff=python
+*.pyw diff=python
+
+# JavaScript/TypeScript
+*.js diff=javascript
+*.jsx diff=javascript
+*.ts diff=typescript
+*.tsx diff=typescript
+
+# Shell scripts
+*.sh diff=shell
+*.bash diff=shell
+
+# Markdown
+*.md diff=markdown
+*.markdown diff=markdown
+
+# JSON (with better formatting)
+*.json diff=json
+
+# YAML
+*.yml diff=yaml
+*.yaml diff=yaml
+
+# ============================================================================
+# PROJECT-SPECIFIC SETTINGS
+# ============================================================================
+
+# AI Team System specific files
+instructions/*.md text eol=lf
+logs/*.log text eol=lf
+*.sh text eol=lf executable
+
+# tmux configuration
+.tmux.conf text eol=lf
+tmux.conf text eol=lf
+
+# Git hooks
+.git/hooks/* text eol=lf
+
+# ============================================================================
+# SECURITY & SENSITIVE FILES
+# ============================================================================
+
+# Mark sensitive files for special handling
+*.key binary filter=remove-secrets
+*.pem binary filter=remove-secrets
+*credentials* binary filter=remove-secrets
+*secret* binary filter=remove-secrets
+*.env binary filter=remove-secrets
+
+# ============================================================================
+# EXPORT SETTINGS
+# ============================================================================
+
+# Files to exclude from git archive exports
+.gitignore export-ignore
+.gitattributes export-ignore
+.github/ export-ignore
+.vscode/ export-ignore
+.idea/ export-ignore
+tests/ export-ignore
+docs/build/ export-ignore
+
+# Temporary and cache directories
+tmp/ export-ignore
+cache/ export-ignore
+.cache/ export-ignore
+logs/temp/ export-ignore
+
+# ============================================================================
+# LINGUIST SETTINGS (GitHub language detection)
+# ============================================================================
+
+# Override GitHub's language detection
+*.md linguist-documentation
+*.txt linguist-documentation
+docs/ linguist-documentation
+examples/ linguist-documentation
+
+# Mark generated files
+tmp/ linguist-generated
+build/ linguist-generated
+dist/ linguist-generated
+
+# Mark vendor files
+node_modules/ linguist-vendored
+vendor/ linguist-vendored
+
+# ============================================================================
+# CUSTOM FILTERS
+# ============================================================================
+
+# Define custom filters for sensitive data
+# These require setup with git config filter.remove-secrets.clean
+# and git config filter.remove-secrets.smudge
+
+# Logs with potential sensitive data
+logs/communication.log filter=sanitize-logs
+logs/*.log filter=sanitize-logs
+
+# Configuration files
+*.conf filter=sanitize-config
+config.* filter=sanitize-config
+
+# ============================================================================
+# PERFORMANCE OPTIMIZATIONS
+# ============================================================================
+
+# Large files that should use Git LFS (if available)
+# Uncomment and configure if using Git LFS
+# *.zip filter=lfs diff=lfs merge=lfs
+# *.tar.gz filter=lfs diff=lfs merge=lfs
+# *.mp4 filter=lfs diff=lfs merge=lfs
+# logs/*.log filter=lfs diff=lfs merge=lfs
+
+# ============================================================================
+# WORKING TREE ENCODING
+# ============================================================================
+
+# Specify encoding for specific files if needed
+# *.txt encoding=utf-8
+# *.md encoding=utf-8
+
+# End of .gitattributes

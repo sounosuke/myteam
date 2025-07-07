@@ -1,192 +1,129 @@
-# AI並列実行チーム - 柔軟役割分担システム
+# CLAUDE.md
 
-## システム概要
-Claude CLIを使用したtmux並列実行環境で、5つのAIエージェントが協調して任意のプロジェクトを実行するシステムです。開発に限らず、マーケティング、企画、分析など幅広い業務に対応可能です。
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 📁 システム構成ファイル
+## Multi-Agent AI Team System
 
-### 役割定義ファイル（instructions/フォルダ）
-- `instructions/ceo.md` - CEO（最高経営責任者）の役割と行動指針
-- `instructions/manager.md` - Manager（プロジェクトマネージャー）の役割とタスク依存関係管理システム
-- `instructions/developer.md` - 実行エージェント（dev1-3）の柔軟役割対応指針
+This repository contains a tmux-based multi-agent AI collaboration system using Claude CLI. The system orchestrates 5 AI agents working together on projects across development, marketing, planning, and analysis.
 
-### 実行スクリプト
-- `start-ai-team.sh` - tmuxセッション起動（CEO、teamセッション作成）
-- `initialize-agents.sh` - 各エージェントへの役割説明と初期化
-- `send-message.sh` - エージェント間メッセージ送信システム
-- `ceo-command.sh` - CEO操作支援コマンド
+### Core Architecture
 
-### ログ・通信
-- `logs/communication.log` - 全エージェント間通信ログ
+The system follows a hierarchical delegation model:
+- **CEO (ceo:0)**: Strategic decision-maker, delegates all work to Manager
+- **Manager (team:0.0)**: Project coordinator, manages task dependencies and team allocation
+- **3 Execution Agents (team:0.1-0.3)**: Flexible specialists adapting to project needs
 
-## 🤖 チーム構成
+### Key Commands
 
-### CEO（最高経営責任者）- ceo:0
-**役割：** 戦略決定と最終承認
-- ✅ **委任専念：** 直接作業は行わず、必ずmanagerに委任
-- ✅ **方針決定：** プロジェクト全体の方向性と優先度を決定
-- ✅ **最終承認：** 完成品の品質確認と承認判断
-- ❌ **禁止：** 自分でコーディング・直接作業・技術実装
-
-### Manager（プロジェクトマネージャー）- team:0.0  
-**役割：** 柔軟なチーム統括とタスク依存関係管理
-- ✅ **動的役割分担：** プロジェクト性質に応じて各エージェントに最適な役割を配分
-- ✅ **タスク依存関係管理：** 並列/順次実行の判断とタスク配布戦略
-- ✅ **自動ワークフロー：** 完了報告受信時に依存関係をチェックして次アクション自動実行
-- ✅ **統合管理：** 各エージェントの成果を統合してCEOに報告
-- ✅ **対応範囲：** 開発・マーケティング・企画・分析・戦略など全領域
-
-### 実行エージェント1（dev1）- team:0.1
-**役割：** 柔軟な専門性発揮
-- ✅ **適応型：** UI/UX、フロントエンド、マーケティング、デザインに適性
-- ✅ **完了報告：** タスク完了時は必ずmanagerに「【完了報告】」送信
-- ✅ **役割変更：** managerからの指示に応じて専門分野を動的に変更
-
-### 実行エージェント2（dev2）- team:0.2
-**役割：** 柔軟な専門性発揮
-- ✅ **適応型：** バックエンド、インフラ、データ分析、戦略立案に適性
-- ✅ **完了報告：** タスク完了時は必ずmanagerに「【完了報告】」送信
-- ✅ **役割変更：** managerからの指示に応じて専門分野を動的に変更
-
-### 実行エージェント3（dev3）- team:0.3
-**役割：** 柔軟な専門性発揮
-- ✅ **適応型：** 品質管理、テスト、リサーチ、運営管理に適性
-- ✅ **完了報告：** タスク完了時は必ずmanagerに「【完了報告】」送信
-- ✅ **役割変更：** managerからの指示に応じて専門分野を動的に変更
-
-## 🔄 自動ワークフローシステム
-
-### 基本フロー
-```
-1. ユーザー → CEO（依頼）
-2. CEO → Manager（委任指示）
-3. Manager → 依存関係分析・実行戦略決定
-4. Manager → 実行エージェント達（戦略的タスク配布）
-5. 実行エージェント → Manager（完了報告）
-6. Manager → 依存関係チェック・自動判断（次段階 or 統合 or CEO報告）
-7. Manager → CEO（最終完成報告）
-8. CEO → ユーザー（承認・納品）
-```
-
-### 🧠 タスク依存関係管理システム
-
-**managerが自動で実行する分析・判断：**
-
-#### 1. 依存関係分析
-- 各タスクの前提条件確認
-- タスク間の関係性分類
-- 実行戦略の決定
-
-#### 2. 実行戦略
-**A) 並列実行：** 独立タスクを同時配布
-- 例：市場調査・競合分析・トレンド調査を同時実行
-
-**B) 順次実行：** 前タスク完了後に次配布  
-- 例：試作品作成 → テスト実施 → 改善提案
-
-**C) 部分並列：** 段階的な混合実行
-- 例：設計(並列) → 統合(順次) → テスト(並列)
-
-#### 3. 完了報告時の自動処理
-- 依存関係チェック
-- 次段階タスクの即座配布
-- 待機エージェントへの準備指示
-
-### プロジェクト例
-
-**Webアプリ開発（部分並列）：**
-- 段階1(並列): dev1→UI設計、dev2→API設計
-- 段階2(並列): dev1→フロント実装、dev2→バック実装  
-- 段階3(順次): dev3→統合テスト
-
-**市場調査プロジェクト（並列実行）：**
-- 同時実行: dev1→顧客調査、dev2→競合分析、dev3→トレンド調査
-
-**商品開発（順次実行）：**
-- 段階1: dev1→コンセプト設計
-- 段階2: dev2→技術仕様（コンセプト使用）
-- 段階3: dev3→試作品作成（設計・仕様統合）
-- 段階4: dev1,dev2→並列テスト（試作品使用）
-
-## 📞 連絡システム
-
-### メッセージ送信
+#### System Setup
 ```bash
-./send-message.sh [エージェント名] "[メッセージ内容]"
-```
-
-**利用可能エージェント：**
-- `ceo` - 最高経営責任者
-- `manager` - プロジェクトマネージャー  
-- `dev1` - 実行エージェント1
-- `dev2` - 実行エージェント2
-- `dev3` - 実行エージェント3
-
-### エージェント一覧確認
-```bash
-./send-message.sh --list
-```
-
-## 🚀 システム起動方法
-
-### 1. チーム起動
-```bash
+# Start the AI team system
 ./start-ai-team.sh
-```
-- tmuxセッション作成（ceo、team）
-- Claude CLI起動（--dangerously-skip-permissions付き）
 
-### 2. エージェント初期化
-```bash
-./initialize-agents.sh  
-```
-- 各エージェントに役割説明
-- 柔軟システム対応の初期化メッセージ送信
+# Initialize all agents with their roles
+./initialize-agents.sh
 
-### 3. プロジェクト開始
-- CEOにアクセス：`tmux attach -t ceo`
-- 依頼内容を入力
-- 自動的にmanager→実行エージェント達に展開
-
-### 4. システム停止
-```bash
+# Stop the entire system
 tmux kill-server
 ```
 
-## 💡 システムの特徴
-
-### ✅ 柔軟性
-- **業務制限なし：** 開発・マーケティング・企画・分析など任意の業務対応
-- **動的役割分担：** プロジェクト性質に応じて最適な役割を自動配分
-- **適応型エージェント：** 各エージェントが状況に応じて専門性を発揮
-
-### ✅ 自動化
-- **タスク依存関係管理：** 並列/順次実行の自動判断とタスク配布戦略
-- **自動ワークフロー：** 完了報告に基づく依存関係チェックと次アクション自動決定
-- **自動統合：** 各エージェントの成果を自動的に統合・品質確認
-- **自動報告：** CEO向け完成報告の自動生成
-
-### ✅ 品質管理
-- **段階的承認：** Manager→CEO の二段階品質チェック
-- **完了報告義務：** 全エージェントの作業完了報告必須
-- **統合確認：** 個別成果の統合時品質確認
-
-## 📋 ログ・監視
-
-### 通信ログ
-全エージェント間の通信は `logs/communication.log` に自動記録
-
-### tmuxセッション監視
+#### Inter-Agent Communication
 ```bash
-tmux list-sessions    # セッション一覧
-tmux attach -t ceo    # CEO接続
-tmux attach -t team   # チーム接続
+# Send message to specific agent
+./send-message.sh [agent_name] "[message]"
+
+# Available agents: ceo, manager, dev1, dev2, dev3
+./send-message.sh manager "Start new project..."
+
+# List all agents
+./send-message.sh --list
 ```
 
-## 🎯 効果的な使い方
+#### Session Management
+```bash
+# Connect to CEO (strategic decisions)
+tmux attach -t ceo
 
-1. **明確な依頼：** CEOには具体的で明確な依頼内容を伝える
-2. **委任信頼：** CEOは一人で作業せず、必ずmanagerに委任する
-3. **自動進行：** managerの自動ワークフローを信頼して待つ
-4. **品質重視：** 各段階での品質確認を重視する
-5. **柔軟対応：** 固定概念にとらわれず、柔軟な役割分担を活用する 
+# Connect to team workspace (4-pane view)
+tmux attach -t team
+
+# List active sessions
+tmux list-sessions
+```
+
+### Agent Role Architecture
+
+#### CEO Behavior Pattern
+- **Never** performs direct work or coding
+- **Always** delegates to Manager using structured format
+- Provides final approval after Manager completion reports
+- Follows strict delegation protocols in `instructions/ceo.md`
+
+#### Manager Workflow System
+- Receives CEO delegation and breaks down into tasks
+- Analyzes task dependencies (parallel/sequential/mixed execution)
+- Dynamically assigns roles to dev agents based on project type
+- **Critical**: Must respond to completion reports with next actions
+- Implements automatic workflow progression
+
+#### Execution Agent Adaptability
+- **dev1**: UI/UX, frontend, marketing, design focus
+- **dev2**: Backend, infrastructure, data analysis, strategy focus  
+- **dev3**: Quality management, testing, research, operations focus
+- **Must** send completion reports to Manager using `./send-message.sh`
+
+### Task Dependency Management
+
+The Manager implements three execution strategies:
+
+1. **Parallel Execution**: Independent tasks run simultaneously
+2. **Sequential Execution**: Tasks depend on previous completion
+3. **Partial Parallel**: Mixed approach with staged dependencies
+
+### Communication Protocol
+
+All agent communication is logged to `logs/communication.log`. Critical message patterns:
+- `【プロジェクト開始指示】` - CEO to Manager delegation
+- `【完了報告】` - Agent to Manager completion reports
+- `【プロジェクト完了報告】` - Manager to CEO final reports
+
+### File Structure
+
+```
+instructions/          # Agent role definitions
+├── ceo.md            # CEO behavior and delegation patterns
+├── manager.md        # Manager workflow and dependency management
+└── developer.md      # Execution agent adaptability guidelines
+
+logs/
+└── communication.log # Complete inter-agent communication history
+
+*.sh                  # System control scripts
+```
+
+### Agent Initialization
+
+Each agent is initialized with Claude CLI using role-specific instruction files:
+- CEO: `claude --dangerously-skip-permissions instructions/ceo.md`
+- Manager: `claude --dangerously-skip-permissions instructions/manager.md`  
+- Dev agents: `claude --dangerously-skip-permissions instructions/developer.md`
+
+### System Monitoring
+
+The system maintains persistent tmux sessions allowing real-time monitoring of:
+- Individual agent progress
+- Inter-agent communication flow
+- Task completion status
+- Workflow dependency resolution
+
+Communication failures trigger escalation protocols defined in agent instruction files.
+
+### Project Types Supported
+
+The system dynamically adapts to handle:
+- Software development (frontend/backend/testing)
+- Marketing campaigns (research/strategy/content)
+- Business planning (analysis/strategy/documentation)
+- Research projects (investigation/analysis/reporting)
+
+Role assignment is determined by Manager based on project requirements and agent specializations.
